@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>product listing project</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      .heading1 {
+        text-align: center;
+        padding: 40px 0;
+      }
+      .main {
+        width: 1320px;
+        display: flex;
+        justify-content: center;
+        margin: auto;
+      }
+      .filterBox {
+        flex-basis: 25%;
+      }
+      .product {
+        flex-basis: 75%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-right: 50px;
+      }
+      .CategoryList {
+        margin-top: 20px;
+        margin-left: 50px;
+      }
+      .CategoryList label {
+        display: block;
+        padding: 10px 0px;
+      }
+
+      .productItems {
+        flex-basis: 31%;
+        box-shadow: 0px 0px 10px 2px #ccc;
+        margin-bottom: 20px;
+      }
+      .productItems img {
+        width: 100%;
+        height: 250px;
+      }
+      .productItems p {
+        padding: 10px;
+      }
+      .productItems h3 {
+        padding: 10px;
+      }
+      .productItems h4{
+          padding: 10px;
+          border-bottom: 1px solid red;
+      }
+
+      @media screen and (max-width: 480px) {
+      .productItems {
+        flex-basis: calc(100% - 20px);
+      }
+    }
+    </style>
+  </head>
+  <body>
+    <h1 class="heading1">Our products</h1>
+    <div class="main">
+      <div class="filterBox">
+        <h2>Category</h2>
+        <div class="CategoryList">
+          <!-- <label for=""> <input type="checkbox" />Mens </label> -->
+          <!-- <label for=""> <input type="checkbox" />Mens </label>
+          <label for=""> <input type="checkbox" />Mens </label>
+          <label for=""> <input type="checkbox" />Mens </label> -->
+        </div>
+      </div>
+      <div class="product">
+        <div class="productItems">
+          <img src="img1.jpeg" alt="" />
+          <p>price Rs. 109.95 | 3.9</p>
+          <h3>Fjallraven - foldsack No. 1 Backpack,fits 15 laptops</h3>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+
+
+// let checkCat = ["men's clothing", "jewelery", "electronics", "women's clothing"];
+// console.log(checkCat.includes("electronics"));
+
+
+
+     let productDiv = document.querySelector(".product");
+
+     var CategoryListDiv= document.querySelector(".CategoryList");
+     let allCat=[];
+     let displayProduct = async (allCheckCat=[])=>{
+
+          // CategoryListDiv.innerHTML='';
+          productDiv.innerHTML ='';
+let product = await fetch('https://fakestoreapi.com/products');
+let finalProduct = await product.json();// 20 enteries
+finalProduct.forEach(element => {// run 20 times
+
+     // shows the common categories
+     if(!allCat.includes(element.category)){
+
+          CategoryListDiv.innerHTML += `<label> <input type="checkbox" onClick='categoryFilter()' value="${element.category}"  />${element.category}
+                </label>`;
+
+          allCat.push(element.category)
+     }
+
+
+
+
+     if(allCheckCat.length==0){
+     allCheckCat=allCat;
+
+     }
+     if(allCheckCat.includes(element.category)){
+
+  
+
+
+     // product data
+   productDiv.innerHTML +=`<div class="productItems">
+          <img src="${element.image}" alt="" />
+          <h4>${element.category}</h4>
+          <p>price Rs. ${element.price} | ${element.rating.rate}</p>
+          <h3> ${element.title}</h3>
+        </div>`
+     }
+});
+
+     }
+
+     displayProduct();
+
+     let categoryFilter = () => {
+        let checkInput = document.querySelectorAll("input[type='checkbox']");
+        let checkData = [];
+        checkInput.forEach((e) => {
+            if (e.checked) {
+                checkData.push(e.value);
+            }
+        });
+        displayProduct(checkData);
+        // console.log(checkData)
+    }
+     
+  </script>
+</html>
